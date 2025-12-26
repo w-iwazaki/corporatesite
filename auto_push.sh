@@ -5,8 +5,14 @@ TARGET_DIR="/Users/vegekul-800/Desktop/corpsite"
 
 cd "$TARGET_DIR" || exit
 
-echo "Auto-push script started for $TARGET_DIR"
-echo "Monitoring changes... (Press Ctrl+C to stop)"
+echo ""
+echo "================================================"
+echo "  Auto-push script started!"
+echo "  Target: $TARGET_DIR"
+echo "  Monitoring changes every 30 seconds..."
+echo "  (Press Ctrl+C to stop)"
+echo "================================================"
+echo ""
 
 while true; do
     if [[ -n $(git status -s) ]]; then
