@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News | ベジクル株式会社</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="images/favicon.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <img src="https://www.vegekul.com/wp/wp-content/themes/tsukasa_theme_20240311/img/common/header_logo.svg"
+                    alt="VEGEKUL">
+            </a>
+            <nav class="desktop-nav">
+                <ul>
+                    <li><a href="company.html">Company</a></li>
+                    <li><a href="service.html">Service</a></li>
+                    <li><a href="news.html" class="active">News</a></li>
+                    <li><a href="recruit.html">Recruit</a></li>
+                    <li><a href="contact.html" class="nav-btn-contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="hamburger" id="hamburger" aria-label="メニュー">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="mobile-nav" id="mobileNav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="company.html">Company</a></li>
+                    <li><a href="service.html">Service</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="recruit.html">Recruit</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>News</h1>
+            <p>お知らせ</p>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container section-padding">
+        <div class="news-list-full" id="newsList">
+            <p style="text-align: center; padding: 40px;">読み込み中...</p>
+        </div>
+    </div>
+
+    <script>
+        // MicroCMS Configuration
+        const API_KEY = 'bPyYvGyQWTKLrLnRp8w3CVddsV6sLXTSgFpb';
+        const SERVICE_DOMAIN = 'vegekul'; // ユーザーに入力してもらう
+        const ENDPOINT = 'news';
+
+        async function fetchNews() {
+            const newsList = document.getElementById('newsList');
+
+            if (SERVICE_DOMAIN === 'YOUR_SERVICE_DOMAIN') {
+                newsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; background: #fff3cd; border-radius: 8px; color: #856404;">
+                        <h3>設定が必要です</h3>
+                        <p>MicroCMSのサービスドメインが設定されていません。<br>
+                        <code>news.html</code> の <code>SERVICE_DOMAIN</code> をあなたのサービスIDに書き換えてください。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://${SERVICE_DOMAIN}.microcms.io/api/v1/${ENDPOINT}`, {
+                    headers: {
+                        'X-MICROCMS-API-KEY': API_KEY
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                renderNews(data.contents);
+            } catch (error) {
+                console.error('Error fetching news:', error);
+                newsList.innerHTML = '<p style="text-align: center; color: red;">ニュースの読み込みに失敗しました。</p>';
+            }
+        }
+
+        function renderNews(contents) {
+            const newsList = document.getElementById('newsList');
+
+            if (contents.length === 0) {
+                newsList.innerHTML = '<p style="text-align: center;">お知らせはありません。</p>';
+                return;
+            }
+
+            const html = contents.map(item => {
+                // 日付のフォーマット (YYYY.MM.DD)
+                const date = new Date(item.publishedAt || item.createdAt);
+                const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+
+                // カテゴリ (なければ「お知らせ」)
+                const category = item.category ? item.category.name : 'お知らせ';
+
+                return `
+                    <a href="news_detail.html?id=${item.id}" class="news-item-full">
+                        <div class="news-meta">
+                            <span class="news-date">${formattedDate}</span>
+                            <span class="news-category">${category}</span>
+                        </div>
+                        <h3 class="news-title">${item.title}</h3>
+                    </a>
+                `;
+            }).join('');
+
+            newsList.innerHTML = html;
+        }
+
+        // Fetch news on load
+        fetchNews();
+    </script>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-logo">
+                <a href="index.html" class="logo">
+                    <img src="https://www.vegekul.com/wp/wp-content/themes/tsukasa_theme_20240311/img/common/header_logo.svg"
+                        alt="VEGEKUL">
+                </a>
+                <p>ベジクル株式会社</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Menu</h4>
+                    <ul>
+                        <li><a href="company.html">Company</a></li>
+                        <li><a href="service.html">Service</a></li>
+                        <li><a href="news.html">News</a></li>
+                        <li><a href="recruit.html">Recruit</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Service</h4>
+                    <ul>
+                        <li><a href="https://www.vegekul.com/" target="_blank">ベジクル</a></li>
+                        <li><a href="https://rakushiire.com/lp/" target="_blank">ラクシーレ</a></li>
+                        <li style="margin-top: 10px;"><a href="https://www.vegekul.com/privacy/"
+                                target="_blank">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 VEGEKUL, Inc. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="main.js"></script>
+</body>
+
+</html>
