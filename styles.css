@@ -880,13 +880,13 @@ button {
     object-fit: contain;
 }
 
-.vegekul-bg {
-    /* Removed background color as image covers it */
-}
+/* .vegekul-bg {
+    Removed background color as image covers it
+} */
 
-.rakushiire-bg {
-    /* Removed background color as image covers it */
-}
+/* .rakushiire-bg {
+    Removed background color as image covers it
+} */
 
 .service-label {
     display: inline-block;
