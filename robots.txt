@@ -1,0 +1,5 @@
+User-agent: Google-Favicon
+Allow: /images/favicon.png
+
+User-agent: *
+Allow: /
